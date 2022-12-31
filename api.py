@@ -1,4 +1,6 @@
-from flask import Flask, request, render_template, session, jsonify
+from fastapi import FastAPI, Request, Response
+from pydantic import BaseModel, HttpUrl
+from typing import Union
 from bs4 import BeautifulSoup
 import requests
 from bs4 import BeautifulSoup as bs
@@ -8,17 +10,28 @@ import datetime
 from time import sleep
 import os
 from os.path import exists
-from python-dotenv import dotenv_values
+#from dotenv import dotenv_values
 
-config = dotenv_values(".env")
+#config = dotenv_values(".env")
 
-access_token = config['access_token']
+#access_token = config['access_token']
 DUMMY_DATA = 0
 
 
-app = Flask(__name__)
-app.secret_key = config['secret_key']
+app = FastAPI()
+# app.secret_key = config['secret_key']
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+class Hotel(BaseModel):
+    name: str
+    address: Union[str, None] = None
+    stars: int
+    rating: float
+
+
+class Link(BaseModel):
+    url: HttpUrl
 
 
 def hotel_data(url):
@@ -31,7 +44,6 @@ def hotel_data(url):
         with open('sample.txt', 'r') as f:
             r = f.read()
             soup = bs(r, 'html.parser')
-
     try:
         stars_group = soup.find('span', {'data-testid': 'rating-stars'})
         stars = len(stars_group.find_all('svg'))
@@ -44,6 +56,15 @@ def hotel_data(url):
     return hotel_name, address, stars, rating
 
 
+@app.post("/api/hotel")
+async def hotel(url: Link):
+    item_dict = item.dict()
+    # item_dict.update({"price_with_tax": price_with_tax})
+    print(dir(url.parse_obj()))
+    print(url)
+    return "d"  # item_dict
+
+
 def get_coordinates(quote):
     parsed_quote = parse.quote(quote).encode('utf-8')
     r = requests.get(
@@ -54,12 +75,12 @@ def get_coordinates(quote):
     return str_coordinates, relevance
 
 
-def route(hotel_coords, venue_coords, access_token=access_token):
-    api_call = requests.get(
-        f'https://api.mapbox.com/directions/v5/mapbox/driving/{hotel_coords};{venue_coords}.json?access_token={access_token}')
-    time = datetime.timedelta(seconds=api_call.json()['routes'][0]['duration'])
-    dist = api_call.json()['routes'][0]['distance']/1000
-    return "{:0>8}".format(str(time)), round(dist, 2)
+# def route(hotel_coords, venue_coords, access_token=access_token):
+#     api_call = requests.get(
+#         f'https://api.mapbox.com/directions/v5/mapbox/driving/{hotel_coords};{venue_coords}.json?access_token={access_token}')
+#     time = datetime.timedelta(seconds=api_call.json()['routes'][0]['duration'])
+#     dist = api_call.json()['routes'][0]['distance']/1000
+#     return "{:0>8}".format(str(time)), round(dist, 2)
 
 
 @ app.route('/new-project', methods=['GET', 'POST'])
