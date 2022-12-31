@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static', filename='css/main.css') }}"
+        />
+        <title>Booking tool</title>
+    </head>
+    <body>
+        <!-- header -->
+        <header>
+            <h1>Booking tool</h1>
+            <nav>
+                <ul>
+                    <li>
+                        <form class="project">
+                            <input
+                                type="text"
+                                placeholder="Name "
+                                name="lname"
+                            />
+                            <button>Create Project</button>
+                            <p id="feedback-field"></p>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <!-- form to add URLs to list -->
+        <form
+            method="post"
+            action="{{ url_for('index') }}"
+            id="url-form"
+            enctype="multipart/form-data"
+        >
+            <label for="venue">Enter a Venue:</label>
+            <input type="text" name="venue" id="venue" /><br />
+            <label for="urls">Enter a URL:</label>
+            <input type="text" name="urls" id="url-input" /><br />
+            <button type="button" id="add-button">+</button>
+            <input type="submit" value="Submit" />
+        </form>
+
+        <div id="url-list"></div>
+
+        {% if hotel_dataset %}
+        <table>
+            <!-- Table header -->
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Stars</th>
+                <th>Rating</th>
+                <th>Time</th>
+                <th>Distance</th>
+                <th>URL</th>
+            </tr>
+            <!-- Table rows for each hotel -->
+            {% for hotel in hotel_dataset %}
+            <tr>
+                <td>{{ hotel.name }}</td>
+                <td>{{ hotel.address }}</td>
+                <td>{{ hotel.stars * "⭐️" }}</td>
+                <td>{{ hotel.rating }}</td>
+                <td>{{ hotel.time }} min</td>
+                <td>{{ hotel.distance }} km</td>
+                <td><a href="{{ hotel.url }}">URL</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% endif %}
+        <aside>
+            <div id="projects">
+                {% if projects %}
+                <ul>
+                    {% for project in projects %}
+                    <li>{{ project }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </aside>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>
