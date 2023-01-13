@@ -12,6 +12,7 @@ export default function ({ user, links }) {
             <h3>Projects:</h3>
             <Form user={user} />
             <Dashboard />
+
             <div>
                 <ul>
                     {links.map((link) => (
@@ -20,9 +21,11 @@ export default function ({ user, links }) {
                 </ul>
                 {/* <ul>
                     {projects.map((project) => (
-                        <li key={project._id}>{project.projName}</li>
+                        <li key={project}>{project.projName}</li>
                     ))}
                 </ul> */}
+                <br />
+                <Output {...links} />
             </div>
         </div>
     );
