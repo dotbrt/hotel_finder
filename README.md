@@ -1,4 +1,5 @@
 ### Hotel Finder
 
 A tool to help me find hotels. In progress
-Run frontend: uvicorn main:app --reload
+Run backend: uvicorn main:app --reload
+Run frontend: npm run dev

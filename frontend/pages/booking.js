@@ -50,7 +50,9 @@ const BookingTool = () => {
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
                 />
-                <Button onClick={() => setProjectName("")}>Edit</Button>
+                <Button onClick={(e) => setProjectName(e.target.value)}>
+                    Edit
+                </Button>
             </div>
             <div>
                 <label htmlFor="urls">URLs:</label>

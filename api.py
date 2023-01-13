@@ -9,14 +9,22 @@ from urllib import parse
 import datetime
 from time import sleep
 import os
+# from dotenv import load_dotenv giving errors
 from os.path import exists
-#from dotenv import dotenv_values
 
-#config = dotenv_values(".env")
 
-#access_token = config['access_token']
+# config = load_dotenv()
+
+# access_token = config['access_token']
 DUMMY_DATA = 0
 
+DUMMY_RESPONSE = {
+    "name": "Westgate Las Vegas Resort and Casino",
+    "address": "3000 Paradise Road, Las Vegas, NV 89109, United States",
+    "stars": 4,
+    "rating": 7.3,
+    "url": "https://www.booking.com/hotel/us/las-vegas-hotel.en-gb.html"
+}
 
 app = FastAPI()
 # app.secret_key = config['secret_key']
@@ -28,6 +36,7 @@ class Hotel(BaseModel):
     address: Union[str, None] = None
     stars: int
     rating: float
+    url: HttpUrl
 
 
 class Link(BaseModel):
@@ -53,16 +62,14 @@ def hotel_data(url):
     hotel_name = soup.find('h2', {'class': 'pp-header__title'}).text
     rating = soup.find(
         'div', {'data-testid': 'review-score-right-component'}).div.text
-    return hotel_name, address, stars, rating
+    hotel = Hotel(name=hotel_name, address=address,
+                  stars=stars, rating=rating, url=url)
+    return hotel
 
 
 @app.post("/api/hotel")
 async def hotel(url: Link):
-    item_dict = item.dict()
-    # item_dict.update({"price_with_tax": price_with_tax})
-    print(dir(url.parse_obj()))
-    print(url)
-    return "d"  # item_dict
+    return DUMMY_RESPONSE
 
 
 def get_coordinates(quote):
