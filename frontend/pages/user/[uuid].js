@@ -1,28 +1,28 @@
 import clientPromise from "/lib/mongodb";
 import Dashboard from "/pages/dashboard";
 import Form from "/pages/form";
+import Output from "/pages/output";
 
 export default function ({ user, links }) {
     const projects = user.projects;
     return (
         <div>
-            <Dashboard />
             <h3>Email: {user.email}</h3>
+            <h3>Name: {user.name}</h3>
             <h3>Projects:</h3>
-
-            <ul>
-                {projects.map((project) => {
-                    <li key={project.projId}>{project.projName}</li>;
-                })}
-            </ul>
-
-            <Form />
+            <Form user={user} />
+            <Dashboard />
             <div>
                 <ul>
                     {links.map((link) => (
                         <li key={link._id}>{link.url}</li>
                     ))}
                 </ul>
+                {/* <ul>
+                    {projects.map((project) => (
+                        <li key={project._id}>{project.projName}</li>
+                    ))}
+                </ul> */}
             </div>
         </div>
     );

@@ -1,9 +1,7 @@
 import { useState } from "react";
-
 export default function Form(props) {
     const [items, setItems] = useState([]);
     const [newItem, setNewItem] = useState("");
-
     const handleChange = (e) => {
         setNewItem(e.target.value);
     };
@@ -14,6 +12,12 @@ export default function Form(props) {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        items.forEach((item) => {
+            console.log({
+                url: item,
+                owner: props.props.uuid,
+            });
+        });
         // const res = await fetch("/api/links", {
         //     method: "POST",
         //     headers: {
@@ -24,7 +28,6 @@ export default function Form(props) {
         // const json = await res.json();
         // console.log(json);
     };
-
     return (
         <div>
             <form>
